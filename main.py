@@ -1,5 +1,6 @@
 import Config
 import openai
+import random
 import openpyxl
 openai.api_key= Config.api_key
 
@@ -7,11 +8,12 @@ def test(text):
     response = openai.Completion.create(
         model="text-davinci-002",
         prompt=text,
-        temperature=0.7,
-        max_tokens=256,
+        temperature=1.0,
+        max_tokens=356,
         top_p=1,
         frequency_penalty=0,
-        presence_penalty=0
+        presence_penalty=0,
+        best_of=3
     )
     return response.choices[0].text
 
@@ -73,10 +75,22 @@ for i in range (range_start,range_finish):
         elif (str(Stone_Type)).find(',')==-1:
             KEY_WORDS_SAMPLE += "Jewelry stone type:" + Stone_Type + "\n"
 
-    KEY_WORDS_SAMPLE+="Write a description for this product\n"
+    rand = random.randint(1, 6)
+    if rand == 1:
+        KEY_WORDS_SAMPLE += "Describe this as jewelry\n"
+    elif rand == 2:
+        KEY_WORDS_SAMPLE+="Write a description for this product\n"
+    elif rand== 3:
+        KEY_WORDS_SAMPLE+="Jewelry product description\n"
+    elif rand== 4:
+        KEY_WORDS_SAMPLE+="Create a description for this item\n"
+    elif rand == 5:
+        KEY_WORDS_SAMPLE += "Describe for me what is this\n"
+    elif rand == 6:
+        KEY_WORDS_SAMPLE += "Tell me some information about this jewelry product\n"
 
+    res=str(test(KEY_WORDS_SAMPLE))
 
-    res=test(KEY_WORDS_SAMPLE)
     print(res)
 
     worksheet['U'+str(i)] = res                     #Appending result to U[i] column
